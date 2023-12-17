@@ -1,5 +1,3 @@
-
-
 pipeline {
     agent none
     options {
