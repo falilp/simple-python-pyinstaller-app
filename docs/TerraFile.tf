@@ -1,3 +1,4 @@
+// CONFIGURACION BASICA
 terraform {
     required_providers {
         docker = {
@@ -7,48 +8,85 @@ terraform {
     }
 }
 
+// PROVEEDOR - DOCKER
 provider "docker" {
     host = "npipe:////.//pipe//docker_engine" 
 }
 
-resource "docker_network" "net"{
-    name = "jenkins"
-}
-
+// IMAGENES 
 resource "docker_image" "dind" {
     name = "docker:dind"
     keep_locally = false
 }
 
-resource "docker_image" "jenkins" {
+resource "docker_image" "jenkinsBase" {
     name = "jenkins/jenkins"
     keep_locally = false
 }
 
-resource "docker_image" "jenkinsmodify" {
-    name = "jenkinsmodify"
+resource "docker_image" "jenkinsMod" {
+    name = "jenkinsMod"
     build {
         context = "."
-        tag = ["jenkinsmodify:develop"]
+        tag = ["jenkinsMod:develop"]
     }
 }
 
+// NETWORKS
+resource "docker_network" "net"{
+    name = "jenkinsNet"
+}
+
+// CONTENEDORES
 resource "docker_container" "dind" {
+    // Definicion
     image = docker_image.dind.image_id
-    name = "dockerdindT"
-    networks_advanced { name = docker_network.net.name }
+    name = "dindContainer"
+
+    // Configuracion de lanzamiento
+    rm = true
+    privileged = true
+    env = [ "DOCKER_TLS_CERTDIR=/certs" ]
+    volumes {
+        volume_name = "jenkins-docker-certs"
+        container_path = "/certs/client"
+    }
+    volumes {
+        volume_name = "jenkins-data"
+        container_path = "/var/jenkins_home"
+    }
+    networks_advanced { 
+        name = docker_network.net.name 
+        aliases = [ "docker" ]
+    }
     ports {
-        internal = 80
-        external = 8081
+        internal = 2376
+        external = 2376
     }
 }
 
 resource "docker_container" "jenkins" {
-    image = docker_image.jenkinsmodify.image_id
-    name = "jenkins-blueoceanT"
+    // Definicion
+    image = docker_image.jenkinsMod.image_id
+    name = "jenkinsContainer"
+
+    // Configuracion de lanzamiento
+    env = [ "DOCKER_HOST=tcp://docker:2376", "DOCKER_CERT_PATH=/cert/client", "DOCKER_TLS_VERIFY=1" ]
+    volumes {
+        volume_name = "jenkins-docker-certs"
+        container_path = "/certs/client:ro"
+    }
+    volumes {
+        volume_name = "jenkins-data"
+        container_path = "/var/jenkins_home"
+    }
     networks_advanced { name = docker_network.net.name }
     ports {
-        internal = 80
+        internal = 8080
         external = 8080
     }
+    ports {
+        internal = 50000
+        external = 50000
+    }   
 }
