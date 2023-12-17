@@ -72,7 +72,7 @@ resource "docker_container" "jenkins" {
     name = "jenkinsContainer"
 
     // Configuracion de lanzamiento
-    env = [ "DOCKER_HOST=tcp://docker:2376", "DOCKER_CERT_PATH=/cert/client", "DOCKER_TLS_VERIFY=1", "JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"]
+    env = [ "DOCKER_HOST=tcp://docker:2376", "DOCKER_CERT_PATH=/certs/client", "DOCKER_TLS_VERIFY=1", "JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"]
     volumes {
         volume_name = docker_volume.jenkinsCerts.name
         container_path = "/certs/client"
