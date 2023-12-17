@@ -68,11 +68,11 @@ resource "docker_container" "dind" {
 
 resource "docker_container" "jenkins" {
     // Definicion
-    image = "jenkinsmod"//docker_image.jenkinsmod.name
+    image = "jenkinsmod"
     name = "jenkinsContainer"
 
     // Configuracion de lanzamiento
-    env = [ "DOCKER_HOST=tcp://docker:2376", "DOCKER_CERT_PATH=/cert/client", "DOCKER_TLS_VERIFY=1" ]
+    env = [ "DOCKER_HOST=tcp://docker:2376", "DOCKER_CERT_PATH=/cert/client", "DOCKER_TLS_VERIFY=1", "JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"]
     volumes {
         volume_name = docker_volume.jenkinsCerts.name
         container_path = "/certs/client"
