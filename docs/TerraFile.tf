@@ -34,7 +34,7 @@ resource "docker_volume" "jenkinsData" {
 }
 
 // NETWORKS
-resource "docker_network" "net"{
+resource "docker_network" "net" {
     name = "jenkins"
 }
 
