@@ -5,6 +5,7 @@
     2. [Configuraciones del contenedor Jenkins](#configuraciones-del-contenedor-jenkins)
 3. [Explicación del archivo Dockerfile](#explicación-del-archivo-dockerfile)
 4. [Resolución de la práctica](#resolución-de-la-práctica)
+5. [Autores de la práctica](#autores-de-la-práctica)
 
 # Explicación general
 Esta práctica consiste en crear un pipeline en Jenkins que realice el despliegue de una aplicación Python en un contenedor Docker.
@@ -257,3 +258,8 @@ Instala plugins específicos de Jenkins, como Blue Ocean y Docker Workflow, agre
 7. Hacer un commit del nuevo fichero
 8. Abrir Blue Ocean y lanzar el pipeline
 9. Comprobar que todo funciona correctamente 
+
+# Autores de la práctica
+
+- Manuel Coca Alba
+- Rafael Leal Pardo
